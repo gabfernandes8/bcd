@@ -40,3 +40,6 @@ alter table turmas add data_inicio varchar(10) not null;
 
 -- apagando tupla da tabela
 delete from turmas where id=3;
+
+-- selecionando código e nome onde a sala é a B11 e o id maior que 2
+select codigo, nome from turmas where sala="B11" and id > 2;
