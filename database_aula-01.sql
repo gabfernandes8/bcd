@@ -38,3 +38,5 @@ update turmas set codigo=12120 where id=2;
 -- adicionando coluna na tabela 
 alter table turmas add data_inicio varchar(10) not null;
 
+-- apagando tupla da tabela
+delete from turmas where id=3;
