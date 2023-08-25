@@ -54,8 +54,3 @@ produtos.id_produtos=pedidos.id_produtos where id_pedidos=4;
 -- desafio // apelidando
 select p.id_produtos, quantidade, preco from produtos as p inner join pedidos as d on
 p.id_produtos=d.id_produtos where nome="iPhone X";
-
-
--- KHAN ACADEMY
-
- 
