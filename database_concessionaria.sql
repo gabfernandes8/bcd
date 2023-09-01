@@ -80,4 +80,53 @@ insert into estoque (id, carro_id, quant_estoque)values
 (2, 2, 15),
 (3, 3, 50);
 
-select nome_cliente, data_compras, total from clientes as c inner join compras as co;
+-- 1
+select * from carros where quant_estoque > 0;
+
+-- 2
+select * from carros where id_carros=1; 
+
+-- 3
+select nome_cliente, cpf, email_cliente from clientes;
+
+-- 4
+select clientes.nome_cliente, compras.data_compra, compras.total from clientes inner join compras on clientes.cliente_id=compras.cliente_id where compras.id=1; 
+
+-- 5
+select nome_carro, quant_estoque from carros
+where quant_estoque>0;
+
+-- 6 
+ select clientes.nome_cliente from 
+ clientes inner join compras on clientes.cliente_id=compras.cliente_id 
+ inner join carros_compra on compras.id=carros_compra.id 
+ where carros_compra.carro_id=1;
+ 
+  select clientes.nome_cliente, carros.nome_carro from 
+ clientes inner join compras on clientes.cliente_id=compras.cliente_id 
+ inner join carros_compra on compras.id=carros_compra.id 
+ inner join carros on carros_compra.compra_id=carros.id_carros
+ where carros_compra.carro_id=1;
+ 
+ -- 7
+ select compras.total, carros.nome_carro from
+ carros inner join carros_compra on carros.id_carros=carros_compra.carro_id
+ inner join compras on carros_compra.compra_id=compras.id
+ inner join clientes on compras.cliente_id=clientes.cliente_id
+ where clientes.cliente_id=2;
+ 
+ 
+-- DESAFIO
+-- 1
+select clientes.nome_cliente, compras.total from 
+clientes inner join compras on clientes.cliente_id=compras.cliente_id
+order by compras.total desc;
+
+-- 2
+select max(clientes.nome_cliente) from 
+clientes inner join compras on clientes.cliente_id=compras.cliente_id;
+
+select clientes.nome_cliente from clientes
+inner join compras on clientes.cliente_id=compras.cliente_id inner join carros_compra on compras.id=carros_compra.compra_id
+order by carros_compra.subtotal desc
+limit 1;
