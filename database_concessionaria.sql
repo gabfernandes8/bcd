@@ -130,3 +130,31 @@ select clientes.nome_cliente from clientes
 inner join compras on clientes.cliente_id=compras.cliente_id inner join carros_compra on compras.id=carros_compra.compra_id
 order by carros_compra.subtotal desc
 limit 1;
+
+-- 3
+
+
+-- exemplo com WHERE
+-- AND
+SELECT * FROM carros WHERE categoria = 'SUV' AND preco < 50000;
+
+-- OR
+ SELECT * FROM carros WHERE categoria = 'SUV' OR preco > 60000;
+ 
+ -- NOT
+ SELECT * FROM carros WHERE NOT categoria = 'Econômico';
+ 
+ -- IS NULL
+ SELECT * FROM carros WHERE descricao IS NULL;
+ 
+ -- IS NOT NULL
+ SELECT * FROM carros WHERE descricao IS NOT NULL;
+ 
+ -- BETWEEN
+ SELECT * FROM carros WHERE preco BETWEEN 30000 AND 70000;
+ 
+ -- IN
+ SELECT * FROM carros WHERE categoria IN ('Sedan', 'SUV');
+
+-- LIKE
+SELECT * FROM carros WHERE nome_carro LIKE 'Cre%';
