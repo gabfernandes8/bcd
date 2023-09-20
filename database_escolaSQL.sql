@@ -117,76 +117,114 @@ VALUES
  (5, 5, 102, '2023-03-15', 'presente'),
  (6, 6, 102, '2023-03-15', 'presente');
  
--- Qual é o nome do professor que ministra a disciplina com código "BD201"?
+-- 1: Qual é o nome do professor que ministra a disciplina com código "BD201"?
 select professores.nome from professores 
 inner join turmas on professores.professor_id=turmas.professor_id
 inner join disciplinas on turmas.disciplina_id=disciplinas.disciplina_id
 where codigo_disciplina="BD201";
 
--- Para a disciplina com código "PC101", obtenha a lista de alunos que obtiveram notas maiores que 80.
+-- 2: Para a disciplina com código "PC101", obtenha a lista de alunos que obtiveram notas maiores que 80.
 select alunos.nome from alunos 
 inner join notas on alunos.aluno_id=notas.aluno_id
 inner join disciplinas on notas.disciplina_id=disciplinas.disciplina_id
 where codigo_disciplina="PC101" AND notas.nota > 80;
 
--- Quais alunos estiveram presentes na aula da turma com ID 101 na data '2023-03-10'?
+-- 3: Quais alunos estiveram presentes na aula da turma com ID 101 na data '2023-03-10'?
 select alunos.nome from alunos 
 inner join presenca on alunos.aluno_id=presenca.aluno_id
 inner join turmas on presenca.turma_id=turmas.turma_id
 where turmas.turma_id=101 AND presenca.data_aula="2023-03-10";
 
--- Calcule a média das notas dos alunos na disciplina com código "IA501".
+-- 4: Calcule a média das notas dos alunos na disciplina com código "IA501".
 select avg(notas.nota) from notas 
 inner join disciplinas on notas.disciplina_id=disciplinas.disciplina_id
 where disciplinas.codigo_disciplina="IA501";
 
--- Liste todos os alunos e as disciplinas que eles estão matriculados. Inclua os alunos que não estão matriculados em nenhuma disciplina.
+-- 5: Liste todos os alunos e as disciplinas que eles estão matriculados. Inclua os alunos que não estão matriculados em nenhuma disciplina.
 select alunos.nome, disciplinas.nome_disciplina from alunos
 left join notas on alunos.aluno_id=notas.aluno_id
 left join disciplinas on notas.disciplina_id=disciplinas.disciplina_id;
 
--- Liste todos os alunos que não têm notas registradas.
+-- 6: Liste todos os alunos que não têm notas registradas.
 select alunos.nome from alunos
 inner join notas on alunos.aluno_id=notas.aluno_id
 where notas.nota is null;
 
--- Quais disciplinas têm menos de 40 horas de carga horária ou mais de 100 horas de carga horária?
+-- 7: Quais disciplinas têm menos de 40 horas de carga horária ou mais de 100 horas de carga horária?
 select nome_disciplina from disciplinas 
 where carga_horaria < 40 or carga_horaria > 100;
 
--- Encontre o nome dos professores que não estão ministrando a disciplina "IA501".
+-- 8: Encontre o nome dos professores que não estão ministrando a disciplina "IA501".
 select professores.nome from professores
 inner join turmas on professores.professor_id=turmas.professor_id
 inner join disciplinas on turmas.disciplina_id=disciplinas.disciplina_id
 where not disciplinas.codigo_disciplina = "IA501";
 
--- Quais turmas não têm professores atribuídos?
+-- 9: Quais turmas não têm professores atribuídos?
 select turmas.ano_escolar from turmas
 inner join professores on turmas.professor_id=professores.professor_id
 where professores.professor_id is null;
 
--- Liste as disciplinas e seus códigos onde pelo menos um aluno obteve uma nota menor que 60.
+-- 10: Liste as disciplinas e seus códigos onde pelo menos um aluno obteve uma nota menor que 60.
 select disciplinas.nome_disciplina, disciplinas.codigo_disciplina from disciplinas
 left join notas on disciplinas.disciplina_id=notas.disciplina_id
 left join alunos on notas.aluno_id=alunos.aluno_id
 where notas.nota < 60;
 
--- Qual é a média das notas dos alunos na disciplina com código "DW301" entre '2023-03-01' e '2023-03-31'?
+-- 11: Qual é a média das notas dos alunos na disciplina com código "DW301" entre '2023-03-01' e '2023-03-31'?
+select avg(notas.nota) as media from notas 
+inner join disciplinas on notas.disciplina_id=disciplinas.disciplina_id
+where disciplinas.codigo_disciplina="DW301" and data_avaliacao between "2023-03-01" and '2023-03-31';
 
--- Liste todos os alunos que estão matriculados em mais de uma disciplina.
+-- 12: Liste todos os alunos que estão matriculados em mais de uma disciplina.
+select COUNT(alunos.aluno_id) as contagem, alunos.nome from alunos
+inner join notas on alunos.aluno_id=notas.aluno_id
+inner join disciplinas on notas.disciplina_id=disciplinas.disciplina_id
+group by alunos.nome having contagem > 1;
 
--- Quais são os anos escolares distintos das turmas onde pelo menos um aluno faltou?
+-- 13: Quais são os anos escolares distintos das turmas onde pelo menos um aluno faltou?
+select ano_escolar from turmas
+inner join presenca on turmas.turma_id=presenca.turma_id
+where presenca.presenca = "ausente";
 
--- Mostre o nome dos professores que estão ministrando a disciplina "PC101" ou "BD201".
+-- 14: Mostre o nome dos professores que estão ministrando a disciplina "PC101" ou "BD201".
+select professores.nome from professores
+inner join turmas on professores.professor_id=turmas.professor_id
+inner join disciplinas on turmas.disciplina_id=disciplinas.disciplina_id
+where codigo_disciplina="PC101" OR codigo_disciplina="BD201";
 
--- Qual é o nome do aluno que faltou em todas as aulas?
+-- 15: Qual é o nome do aluno que faltou em todas as aulas?
+select alunos.nome from alunos
+inner join presenca on alunos.aluno_id=presenca.aluno_id
+where not presenca.presenca = "presente";
 
--- Liste as disciplinas e seus códigos onde todos os alunos obtiveram uma nota maior ou igual a 70.
+-- 16: Liste as disciplinas e seus códigos onde todos os alunos obtiveram uma nota maior ou igual a 70.
+select d.nome_disciplina, d.codigo_disciplina, min(nota) as min_nota from disciplinas as d
+inner join notas as n on d.disciplina_id=n.disciplina_id
+group by d.nome_disciplina, d.codigo_disciplina having min_nota >=70;
 
--- Quais alunos obtiveram notas entre 80 e 90 na disciplina "IA501" ou "DW301"?
+-- 17: Quais alunos obtiveram notas entre 80 e 90 na disciplina "IA501" ou "DW301"?
+select a.nome from alunos as a
+inner join notas as n on a.aluno_id=n.aluno_id
+inner join disciplinas as d on n.disciplina_id=d.disciplina_id
+where codigo_disciplina="IA501" and n.nota between 80 and 90
+or  codigo_disciplina="DW301" and n.nota between 80 and 90;
 
--- Encontre o nome dos professores que não estão ministrando nenhuma disciplina com carga horária superior a 60 horas.
+-- 18: Encontre o nome dos professores que não estão ministrando nenhuma disciplina com carga horária superior a 60 horas.
+select p.nome from professores as p
+inner join turmas as t on p.professor_id=t.professor_id
+inner join disciplinas as d on t.disciplina_id=d.disciplina_id
+where d.carga_horaria>60;
 
--- Quais são as datas de aulas para a disciplina com código "AA401" entre '2023-04-01' e '2023-04-30' onde pelo menos um aluno faltou?
+-- 19: Quais são as datas de aulas para a disciplina com código "AA401" entre '2023-04-01' e '2023-04-30' onde pelo menos um aluno faltou?
+select pre.data_aula from presenca as pre
+inner join turmas as t on pre.presenca_id=t.turma_id
+inner join disciplinas as d on t.disciplina_id=d.disciplina_id
+where d.codigo_disciplina="AA401" 
+and data_aula between '2023-04-01' and '2023-04-30'
+and pre.presenca = "ausente";
 
--- Liste os nomes dos alunos que não faltaram em nenhuma aula.
+-- 20: Liste os nomes dos alunos que não faltaram em nenhuma aula.
+select a.nome from alunos as a
+inner join presenca as p on a.aluno_id=p.aluno_id
+where not p.presenca="ausente";
