@@ -181,4 +181,17 @@ inner join turmas on disciplinas.id=turmas.disciplina_id
 inner join professores on turmas.professor_id=professores.id
 where professores.nome = "Fernando Leonid";
 
--- 3: 
+-- 3: seleciona os eventos acadêmicos de cada curso e turma
+select e.tema, cursos.nome_curso from eventos_academicos as e
+inner join turmas on e.turma_id=turmas.id
+inner join disciplinas on turmas.disciplina_id=disciplinas.id
+inner join cursos on disciplinas.curso_id=cursos.id;
+
+-- 4: seleciona os professores que lecionam cada disciplinas em
+-- suas respectivas turmas
+select professores.nome, disciplinas.codigo_disciplina, turmas.id from professores
+inner join turmas on professores.id=turmas.professor_id
+inner join disciplinas on turmas.disciplina_id=disciplinas.id;
+
+-- 5: seleciona os alunos cujo nome começa com G ou que tiveram 
+select alunos.nome, 
