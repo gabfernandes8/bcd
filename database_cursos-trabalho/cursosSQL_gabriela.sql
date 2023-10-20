@@ -36,14 +36,13 @@ create table alunos
     nome varchar(100) not null,
     cpf bigint not null,
     tel bigint,
-    data_nascimento date not null,
-    endereco varchar(100) not null
-);
+    data_nascimento date not null
+  );
 
-insert into alunos (nome, cpf, tel, data_nascimento, endereco) values
-("Gabriela Fernandes", 53186706874, 11972870187, '2006-08-08', "Rua Luiz Scott"),
-("Ryan Alves", 51766995837, 11986351543, '2006-08-04', "Rua Bonita"),
-("Taylor Swift", 13131313131, 11913131313, '1989-12-13', "Cornelia Street");
+insert into alunos (nome, cpf, tel, data_nascimento) values
+("Gabriela Fernandes", 53186706874, 11972870187, '2006-08-08'),
+("Ryan Alves", 51766995837, 11986351543, '2006-08-04'),
+("Taylor Swift", 13131313131, 11913131313, '1989-12-13');
 
 create table professores
 (
@@ -52,14 +51,13 @@ create table professores
     cpf bigint not null,
     tel bigint,
     data_nascimento date not null,
-    data_contratacao date,
-    endereco varchar(100) not null
+    data_contratacao date
 );
 
-insert into professores (nome, cpf, tel, data_nascimento, data_contratacao, endereco)values
-("Bruno Gomes", 99999999999, 11999999999, '1996-05-01', '2023-01-09', "Rua Nove"),
-("Fernando Leonid", 10101010101, 11910101010, '1976-08-30', '1999-11-13', "Rua São Script"),
-("Vitor de Jesus", 11111111111, 11911111111, '1996-03-25', '2023-01-09', "Rua Java");
+insert into professores (nome, cpf, tel, data_nascimento, data_contratacao)values
+("Bruno Gomes", 99999999999, 11999999999, '1996-05-01', '2023-01-09'),
+("Fernando Leonid", 10101010101, 11910101010, '1976-08-30', '1999-11-13'),
+("Vitor de Jesus", 11111111111, 11911111111, '1996-03-25', '2023-01-09');
 
 create table matriculas
 (
@@ -95,7 +93,9 @@ insert into turmas (ano_escolar, disciplina_id, professor_id)values
 (2023, 3, 2);
 
 insert into turmas (codigo_turma)values
-(ds)
+('DS1AIT'),
+('DS1BIT'),
+('ELE1IT');
 
 create table notas
 (
@@ -129,7 +129,7 @@ create table presencas
 insert into presencas (data_aula, presenca, disciplina_id, aluno_id)values
 ("2023-10-06", "PRESENTE", 1, 1),
 ("2023-10-06", "PRESENTE", 2, 2),
-("2023-10-06", "AUSENTE", 3, 2);
+("2023-10-06", "AUSENTE", 3, 3);
 
 create table eventos_academicos
 (
@@ -153,7 +153,7 @@ create table atividades_pesquisa
     turma_id integer,
     
     foreign key (turma_id) references turmas(id)
-);
+); 
 
 insert into atividades_pesquisa (tema, turma_id)values
 ("DER", 1),
@@ -193,15 +193,33 @@ inner join cursos on disciplinas.curso_id=cursos.id;
 
 -- 4: seleciona os professores que lecionam cada disciplinas em
 -- suas respectivas turmas
-select professores.nome, disciplinas.codigo_disciplina, turmas.id from professores
+select professores.nome, disciplinas.codigo_disciplina, turmas.codigo_turma from professores
 inner join turmas on professores.id=turmas.professor_id
 inner join disciplinas on turmas.disciplina_id=disciplinas.id;
 
 -- 5: seleciona os alunos cujo nome começa com G ou que estiveram presentes 
 -- na aula do dia 06-10-2023
-select alunos.nome, presencas.presenca from alunos 
+select alunos.nome, presencas.presenca from alunos
 inner join presencas on alunos.id=presencas.aluno_id
 where nome LIKE 'G%' OR presencas.presenca='PRESENTE' AND presencas.data_aula = '2023-10-06';
 
--- 6: seleciona a média dos alunos
-select avg(notas.nota) as avg_notas from notas 
+-- RELATÓRIO DO DESEMPENHO
+select  matriculas.id as codigo_aluno, alunos.nome, avg(notas.nota) as media_escolar, cursos.nome_curso from notas 
+inner join alunos on notas.id=alunos.id
+inner join matriculas on alunos.id=matriculas.aluno_id
+inner join cursos on matriculas.curso_id=cursos.id
+group by alunos.nome;
+
+-- HISTÓRICO ESCOLAR
+select alunos.nome, presencas.data_aula, presencas.presenca, cursos.nome_curso from alunos
+inner join presencas on alunos.id-presencas.aluno_id
+inner join disciplinas on presencas.disciplina_id=disciplinas.id
+inner join cursos on disciplinas.curso_id=cursos.id;
+
+-- AGENDA DE EVENTOS ACADÊMICOS
+select * from eventos_academicos;
+
+-- GESTÃO DE MATRÍCULAS E INSCRIÇÕES
+select alunos.nome, matriculas.id as codigo_aluno, matriculas.data_matricula, cursos.nome_curso from alunos
+inner join matriculas on alunos.id=matriculas.aluno_id
+inner join cursos on matriculas.curso_id=cursos.id;
