@@ -83,6 +83,7 @@ create table turmas
     ano_escolar integer,
     disciplina_id integer,
     professor_id integer,
+    codigo_turma varchar(20),
     
     foreign key (disciplina_id) references disciplinas(id),
     foreign key (professor_id) references professores(id)
@@ -92,6 +93,9 @@ insert into turmas (ano_escolar, disciplina_id, professor_id)values
 (2023, 1, 1),
 (2023, 2, 3),
 (2023, 3, 2);
+
+insert into turmas (codigo_turma)values
+(ds)
 
 create table notas
 (
@@ -193,5 +197,11 @@ select professores.nome, disciplinas.codigo_disciplina, turmas.id from professor
 inner join turmas on professores.id=turmas.professor_id
 inner join disciplinas on turmas.disciplina_id=disciplinas.id;
 
--- 5: seleciona os alunos cujo nome começa com G ou que tiveram 
-select alunos.nome, 
+-- 5: seleciona os alunos cujo nome começa com G ou que estiveram presentes 
+-- na aula do dia 06-10-2023
+select alunos.nome, presencas.presenca from alunos 
+inner join presencas on alunos.id=presencas.aluno_id
+where nome LIKE 'G%' OR presencas.presenca='PRESENTE' AND presencas.data_aula = '2023-10-06';
+
+-- 6: seleciona a média dos alunos
+select avg(notas.nota) as avg_notas from notas 
