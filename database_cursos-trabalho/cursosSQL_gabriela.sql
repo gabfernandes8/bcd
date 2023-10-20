@@ -87,15 +87,10 @@ create table turmas
     foreign key (professor_id) references professores(id)
 );
 
-insert into turmas (ano_escolar, disciplina_id, professor_id)values
-(2023, 1, 1),
-(2023, 2, 3),
-(2023, 3, 2);
-
-insert into turmas (codigo_turma)values
-('DS1AIT'),
-('DS1BIT'),
-('ELE1IT');
+insert into turmas (ano_escolar, disciplina_id, professor_id, codigo_turma)values
+(2023, 1, 1, 'DS1AIT'),
+(2023, 2, 3, 'DS1BIT'),
+(2023, 3, 2, 'ELE1IT');
 
 create table notas
 (
@@ -211,13 +206,22 @@ inner join cursos on matriculas.curso_id=cursos.id
 group by alunos.nome;
 
 -- HISTÓRICO ESCOLAR
-select alunos.nome, presencas.data_aula, presencas.presenca, cursos.nome_curso from alunos
-inner join presencas on alunos.id-presencas.aluno_id
-inner join disciplinas on presencas.disciplina_id=disciplinas.id
-inner join cursos on disciplinas.curso_id=cursos.id;
+select alunos.id, alunos.nome, cursos.nome_curso, presencas.data_aula, presencas.presenca from alunos
+inner join matriculas on alunos.id=matriculas.aluno_id
+join cursos on matriculas.curso_id=cursos.id
+join disciplinas on cursos.id=disciplinas.curso_id
+join presencas on disciplinas.id=presencas.disciplina_id
+group by alunos.id order by alunos.nome;
 
 -- AGENDA DE EVENTOS ACADÊMICOS
-select * from eventos_academicos;
+select turmas.codigo_turma, eventos_academicos.data_evento, eventos_academicos.tema from eventos_academicos
+inner join turmas on eventos_academicos.turma_id=turmas.id;
+
+-- REGISTRO DE FREQUÊNCIA
+select alunos.nome, presencas.presenca, disciplinas.nome_disciplina, cursos.nome_curso from alunos
+inner join presencas on alunos.id=presencas.aluno_id
+inner join disciplinas on presencas.disciplina_id=disciplinas.id
+inner join cursos on disciplinas.curso_id=cursos.id;
 
 -- GESTÃO DE MATRÍCULAS E INSCRIÇÕES
 select alunos.nome, matriculas.id as codigo_aluno, matriculas.data_matricula, cursos.nome_curso from alunos
