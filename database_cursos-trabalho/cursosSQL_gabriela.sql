@@ -168,6 +168,17 @@ insert into parcerias (nome_empresa, tipo_parceria)values
 ("Puzzle Language School", "Projetos"),
 ("Google", "Estágio");
 
-select * from disciplinas;
+-- 1: seleciona o nome das disciplinas de cada curso
+select disciplinas.nome_disciplina, cursos.nome_curso from disciplinas
+inner join cursos on disciplinas.id=cursos.id;
 
-drop table cursos;
+-- 2: seleciona todos os alunos matriculados na turma do Professor Leonid
+select alunos.nome, matriculas.data_matricula from matriculas
+inner join alunos on matriculas.aluno_id=alunos.id
+inner join presencas on alunos.id=presencas.aluno_id
+inner join disciplinas on presencas.disciplina_id=disciplinas.id
+inner join turmas on disciplinas.id=turmas.disciplina_id
+inner join professores on turmas.professor_id=professores.id
+where professores.nome = "Fernando Leonid";
+
+-- 3: 
