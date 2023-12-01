@@ -26,10 +26,12 @@ create table produto
     avaliacao double,
     qt_disponivel integer,
     sub_categoria_id integer,
-    favorito_id integer,
+    id_favorito integer,
+    id_comentario integer,
     
     foreign key (sub_categoria_id) references sub_categoria(id),
-    foreign key (favorito_id) references produto(id)
+    foreign key (id_favorito) references produto(id),
+    foreign key (id_comentario) references comentario(id)
 );
 
 create table endereco
