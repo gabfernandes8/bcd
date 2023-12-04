@@ -11,10 +11,17 @@ create table categoria
 create table sub_categoria
 (
 	id integer primary key auto_increment,
-    nome varchar(50),
-    categoria_id integer,
+    nome varchar(50)
+);
+
+create table categoria_subcategoria
+(
+	id integer primary key auto_increment,
+    id_categoria integer,
+    id_subcategoria integer,
     
-    foreign key (categoria_id) references categoria(id)
+    foreign key (id_categoria) references categoria(id),
+    foreign key (id_subcategoria) references sub_categoria(id)
 );
 
 create table produto
@@ -25,13 +32,19 @@ create table produto
     descricao varchar(100),
     avaliacao double,
     qt_disponivel integer,
-    sub_categoria_id integer,
     id_favorito integer,
-    id_comentario integer,
-    
-    foreign key (sub_categoria_id) references sub_categoria(id),
+
     foreign key (id_favorito) references produto(id),
-    foreign key (id_comentario) references comentario(id)
+);
+
+create table subcategoria_produto
+(
+	id integer primary key auto_increment,
+    id_sub_categoria integer,
+    id_produto integer,
+    
+    foreign key (id_sub_categoria) references categoria_subcategoria(id),
+    foreign key (id_produto) references produto(id)
 );
 
 create table endereco
@@ -52,8 +65,16 @@ create table usuario
     email varchar(70),
     senha varchar(20),
     foto_perfil varchar(100),
+);
+
+create table usuario_endereco
+(
+	id integer primary key auto_increment,
+    id_usuario integer,
+    id_endereco integer,
     
-    foreign key (endereco_id) references endereco(id)
+    foreign key (id_usuario) references usuario(id),
+    foreign key (id_endereco) references endereco(id)
 );
 
 
@@ -74,25 +95,36 @@ create table comentario
 create table pagamento
 (
 	id integer primary key auto_increment,
-    tipo varchar(50)
+    tipo varchar(50),
+    banco varchar(50),
+    n_conta bigint,
+    n_cartao bigint,
+    validade date
 );
 
 create table pedido
 (
 	id integer primary key auto_increment,
     data_pedido date,
+    frete double,
+    total double,
+    qt_itens integer,
     id_produto integer,
     id_usuario integer,
     id_endereco integer,
     id_pagamento integer,
-    frete double,
-    total double,
-    subtotal double,
-    qt_itens integer,
-    
+     
     foreign key (id_usuario) references usuario(id),
     foreign key (id_produto) references produto(id),
     foreign key (id_endereco) references endereco(id),
     foreign key (id_pagamento) references pagamento(id)
 );
 
+create table img_produto
+(
+	id integer primary key auto_increment,
+    url varchar(260),
+    id_produto integer,
+    
+    foreign key (id_produto) references produto(id)
+);
