@@ -34,7 +34,7 @@ create table produto
     qt_disponivel integer,
     id_favorito integer,
 
-    foreign key (id_favorito) references produto(id),
+    foreign key (id_favorito) references produto(id)
 );
 
 create table subcategoria_produto
@@ -64,7 +64,7 @@ create table usuario
     endereco_id integer,
     email varchar(70),
     senha varchar(20),
-    foto_perfil varchar(100),
+    foto_perfil varchar(100)
 );
 
 create table usuario_endereco
@@ -119,6 +119,16 @@ create table pedido
     foreign key (id_endereco) references endereco(id),
     foreign key (id_pagamento) references pagamento(id)
 );
+
+create table pedido_produto
+(
+	id integer primary key auto_increment,
+    id_produto integer,
+    id_pedido integer,
+    
+    foreign key (id_produto) references produto(id),
+    foreign key (id_pedido) references pedido(id)
+    );
 
 create table img_produto
 (
